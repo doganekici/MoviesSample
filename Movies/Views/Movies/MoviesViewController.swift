@@ -29,6 +29,8 @@ class MoviesViewController: UIViewController {
         collectionView.dataSource = moviesDataSource
         
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.ReuseIdentifier)
+        collectionView.register(FooterUCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterUCollectionReusableView.ReuseIdentifier)
+        
         return collectionView
     }()
     
@@ -62,7 +64,11 @@ class MoviesViewController: UIViewController {
         }
         
         self.viewModel.fetchMovies()
-        
+    }
+    
+    //protocol LoadMoreAction - FooterUCollectionReusableView.swift
+    @objc func tapLoadMore(){
+        self.viewModel.fetchMovies()
     }
     
     func setupViews(){

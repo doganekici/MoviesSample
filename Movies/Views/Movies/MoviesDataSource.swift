@@ -14,7 +14,10 @@ class GenericDataSource<T> : NSObject {
 class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        if data.value.count > 0{
+            return 1
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -36,5 +39,21 @@ class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+            case UICollectionView.elementKindSectionFooter:
+                let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: FooterUCollectionReusableView.ReuseIdentifier, for: indexPath) as! FooterUCollectionReusableView
+                
+                self.data.addObserver(footerView) { [weak footerView] _ in
+                    footerView?.finishLoading()
+                }
+                
+                return footerView
+
+            default:
+                assert(false, "Unexpected element kind")
+            }
     }
 }

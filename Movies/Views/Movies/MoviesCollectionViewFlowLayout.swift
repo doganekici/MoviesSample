@@ -24,6 +24,7 @@ class MoviesCollectionViewFlowLayout: UICollectionViewFlowLayout {
         self.minimumLineSpacing = 10
         self.minimumInteritemSpacing = 10
         self.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
+        self.footerReferenceSize = CGSize(width: 0, height: 100)
         
         self.configureLayout()
     }
