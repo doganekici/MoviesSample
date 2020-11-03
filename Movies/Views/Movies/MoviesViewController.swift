@@ -68,15 +68,21 @@ class MoviesViewController: UIViewController {
         
         self.viewModel.onErrorHandling = { [weak self] error in
             let controller = UIAlertController(title: "Error", message: "Unexpected error occurred!!", preferredStyle: .alert)
-            controller.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
+            controller.addAction(UIAlertAction(title: "Try Again", style: .default, handler: {_ in
+                self?.fetch()
+            }))
             self?.present(controller, animated: true, completion: nil)
         }
         
-        self.viewModel.fetchMovies()
+        fetch()
     }
     
     //protocol LoadMoreAction - FooterUCollectionReusableView.swift
     @objc func tapLoadMore(){
+        fetch()
+    }
+    
+    func fetch(){
         self.viewModel.fetchMovies()
     }
     
