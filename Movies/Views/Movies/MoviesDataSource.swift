@@ -9,9 +9,11 @@ import UIKit
 
 class GenericDataSource<T> : NSObject {
     var data: DynamicValue<[T]> = DynamicValue([])
+    var filteredData: DynamicValue<[T]> = DynamicValue([])
 }
 
 class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
+    var isFiltering = false
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if data.value.count > 0{
@@ -21,12 +23,20 @@ class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if isFiltering{
+            return filteredData.value.count
+        }
         return data.value.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.ReuseIdentifier, for: indexPath) as! MovieCollectionViewCell
+        
+        var data = self.data
+        if isFiltering{
+            data = filteredData
+        }
         
         cell.lblTitle.text = data.value[indexPath.row].title
         cell.imgMovie.loadImage(witUrlString: data.value[indexPath.row].posterPath)
@@ -50,6 +60,10 @@ class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
                     footerView?.finishLoading()
                 }
                 
+                if isFiltering{
+                    footerView.frame.size.height = 0.0
+                    footerView.frame.size.width = 0.0
+                }
                 return footerView
 
             default:

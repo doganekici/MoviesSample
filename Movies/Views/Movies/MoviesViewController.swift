@@ -39,6 +39,15 @@ class MoviesViewController: UIViewController {
             return layout
     }()
     
+    private lazy var searchController : UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Movies"
+        return searchController
+    }()
+    
     private let moviesDataSource = MoviesDataSource()
     
     private lazy var viewModel : MoviesViewModel = {
@@ -73,8 +82,9 @@ class MoviesViewController: UIViewController {
     
     func setupViews(){
         navigationItem.rightBarButtonItem = barButtonItem
-        navigationItem.searchController = UISearchController(searchResultsController: nil)
+        navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
+        definesPresentationContext = true
         
         view.addSubview(collectionView)
         collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -97,5 +107,42 @@ class MoviesViewController: UIViewController {
             self.collectionViewFlowLayout.display = .list
         }
         
+    }
+}
+
+extension MoviesViewController: UISearchResultsUpdating {
+    var isSearchBarEmpty: Bool {
+      return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        filterContentForSearchText(searchBar.text!)
+    }
+
+    
+    func filterContentForSearchText(_ searchText: String) {
+        var filteredMovies : [Movie]
+        
+        if isSearchBarEmpty {
+            filteredMovies = self.moviesDataSource.data.value
+        }else{
+            filteredMovies = self.moviesDataSource.data.value.filter { (movie: Movie) -> Bool in
+                 return movie.title!.lowercased().contains(searchText.lowercased())
+             }
+        }
+        
+        self.moviesDataSource.filteredData.value = filteredMovies
+        collectionView.reloadData()
+    }
+}
+
+extension MoviesViewController: UISearchControllerDelegate {
+    func didDismissSearchController(_ searchController: UISearchController){
+        self.moviesDataSource.isFiltering = false
+        collectionView.reloadData()
+    }
+    func willPresentSearchController(_ searchController: UISearchController){
+        self.moviesDataSource.isFiltering = true
     }
 }
