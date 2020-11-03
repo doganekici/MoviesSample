@@ -43,6 +43,9 @@ class MoviesCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 let collectionViewWidth = (collectionView.frame.width - minimumInteritemSpacing - self.sectionInset.left - self.sectionInset.right) / 2
                 let collectionViewHeight = collectionViewWidth * MoviesCollectionViewFlowLayout.GridCellHeightRatio
                 self.itemSize = CGSize(width: collectionViewWidth , height: collectionViewHeight)
+                collectionView.visibleCells.compactMap{ $0 as? MovieCollectionViewCell}.forEach {
+                    $0.lblTitle.textAlignment = .center
+                }
             }
             
         case .list:
@@ -50,6 +53,9 @@ class MoviesCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 let collectionViewWidth = (collectionView.frame.width - self.sectionInset.left - self.sectionInset.right)
                 let collectionViewHeight = collectionViewWidth * MoviesCollectionViewFlowLayout.ListCellHeightRatio
                 self.itemSize = CGSize(width: collectionViewWidth, height: collectionViewHeight)
+                collectionView.visibleCells.compactMap{ $0 as? MovieCollectionViewCell}.forEach {
+                    $0.lblTitle.textAlignment = .left
+                }
             }
         }
     }

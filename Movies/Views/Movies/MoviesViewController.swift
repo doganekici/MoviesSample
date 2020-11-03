@@ -39,11 +39,30 @@ class MoviesViewController: UIViewController {
     
     private let moviesDataSource = MoviesDataSource()
     
+    private lazy var viewModel : MoviesViewModel = {
+        let viewModel = MoviesViewModel(dataSource: moviesDataSource)
+        return viewModel
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Movies"
         
         setupViews()
+        
+        self.moviesDataSource.data.addObserver(self) { [weak self] _ in
+            self?.activityIndicator.stopAnimating()
+            self?.collectionView.reloadData()
+        }
+        
+        self.viewModel.onErrorHandling = { [weak self] error in
+            let controller = UIAlertController(title: "Error", message: "Unexpected error occurred!!", preferredStyle: .alert)
+            controller.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
+            self?.present(controller, animated: true, completion: nil)
+        }
+        
+        self.viewModel.fetchMovies()
+        
     }
     
     func setupViews(){
@@ -60,7 +79,7 @@ class MoviesViewController: UIViewController {
         view.addSubview(activityIndicator)
         activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-
+        activityIndicator.startAnimating()
     }
     
     @objc public func changeCollectionViewDisplay() {
