@@ -16,10 +16,7 @@ class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
     var isFiltering = false
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if data.value.count > 0{
-            return 1
-        }
-        return 0
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -60,7 +57,7 @@ class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
                     footerView?.finishLoading()
                 }
                 
-                if isFiltering{
+                if isFiltering || data.value.count == 0{
                     footerView.frame.size.height = 0.0
                     footerView.frame.size.width = 0.0
                 }
