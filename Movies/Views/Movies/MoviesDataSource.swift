@@ -15,6 +15,13 @@ class GenericDataSource<T> : NSObject {
 class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
     var isFiltering = false
     
+    func value(atIndex index:Int) -> Movie{
+        if isFiltering{
+            return self.filteredData.value[index]
+        }
+        return self.data.value[index]
+    }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }

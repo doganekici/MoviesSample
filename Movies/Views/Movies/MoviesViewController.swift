@@ -25,7 +25,7 @@ class MoviesViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
         collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.delegate = self
+        collectionView.delegate = self
         collectionView.dataSource = moviesDataSource
         
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.ReuseIdentifier)
@@ -150,5 +150,13 @@ extension MoviesViewController: UISearchControllerDelegate {
     }
     func willPresentSearchController(_ searchController: UISearchController){
         self.moviesDataSource.isFiltering = true
+    }
+}
+
+extension MoviesViewController: UICollectionViewDelegate{
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+        let detailViewController = MovieDetailViewController()
+        detailViewController.movie = self.moviesDataSource.value(atIndex: indexPath.row)
+        self.navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
