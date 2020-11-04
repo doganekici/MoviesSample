@@ -36,7 +36,7 @@ class MoviesViewController: UIViewController {
     
     private lazy var barButtonItem : UIBarButtonItem = {
         let layout = UIBarButtonItem(image: UIImage(named: "ListIcon"), style: .plain, target: self, action: #selector(changeCollectionViewDisplay))
-            return layout
+        return layout
     }()
     
     private lazy var searchController : UISearchController = {
@@ -54,6 +54,8 @@ class MoviesViewController: UIViewController {
         let viewModel = MoviesViewModel(dataSource: moviesDataSource)
         return viewModel
     }()
+    
+    private var collectionViewSelectedIndexPath : IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +79,13 @@ class MoviesViewController: UIViewController {
         fetch()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let indexPath = collectionViewSelectedIndexPath{
+            collectionView.reloadItems(at: [indexPath])
+            collectionViewSelectedIndexPath = nil
+        }
+    }
     //protocol LoadMoreAction - FooterUCollectionReusableView.swift
     @objc func tapLoadMore(){
         fetch()
@@ -112,7 +121,6 @@ class MoviesViewController: UIViewController {
             barButtonItem.image = UIImage(named: "GridIcon")
             self.collectionViewFlowLayout.display = .list
         }
-        
     }
 }
 
@@ -155,6 +163,7 @@ extension MoviesViewController: UISearchControllerDelegate {
 
 extension MoviesViewController: UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+        collectionViewSelectedIndexPath = indexPath
         let detailViewController = MovieDetailViewController()
         detailViewController.movie = self.moviesDataSource.value(atIndex: indexPath.row)
         self.navigationController?.pushViewController(detailViewController, animated: true)

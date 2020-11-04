@@ -42,6 +42,12 @@ class MoviesDataSource: GenericDataSource<Movie>, UICollectionViewDataSource {
             data = filteredData
         }
         
+        if FavoriteManager.shared.isFavorite(movie: data.value[indexPath.row]){
+            cell.imgFavorite.isHidden = false
+        }else{
+            cell.imgFavorite.isHidden = true
+        }
+        
         cell.lblTitle.text = data.value[indexPath.row].title
         cell.imgMovie.loadImage(witUrlString: data.value[indexPath.row].posterPath)
         let collectionViewLayout = collectionView.collectionViewLayout as! MoviesCollectionViewFlowLayout

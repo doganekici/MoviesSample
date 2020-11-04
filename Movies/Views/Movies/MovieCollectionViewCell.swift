@@ -29,6 +29,19 @@ class MovieCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    lazy var imgFavorite: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "FilledStarIcon")
+        imageView.layer.shadowColor = UIColor.white.cgColor
+        imageView.layer.shadowOpacity = 1
+        imageView.layer.shadowOffset = .zero
+        imageView.layer.shadowRadius = 8
+        imageView.layer.shouldRasterize = true
+        imageView.layer.rasterizationScale = UIScreen.main.scale
+        return imageView
+    }()
+    
     private lazy var titleOverlay: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -57,6 +70,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
         lblTitle.trailingAnchor.constraint(equalTo: titleOverlay.trailingAnchor, constant: -10).isActive = true
         
         titleOverlay.topAnchor.constraint(equalTo: lblTitle.topAnchor, constant: -10).isActive = true
+        
+        addSubview(imgFavorite)
+        imgFavorite.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        imgFavorite.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
     }
     
     override func prepareForReuse() {

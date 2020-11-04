@@ -60,14 +60,23 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
     
+    private lazy var barButtonItem : UIBarButtonItem = {
+        let layout = UIBarButtonItem(image: UIImage(named: "StarIcon"), style: .plain, target: self, action: #selector(changeFavorite))
+        return layout
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Movie Details"
         view.backgroundColor = .systemBackground
         navigationItem.largeTitleDisplayMode = .never
+        navigationItem.rightBarButtonItem = barButtonItem
         
         setupViews()
         fillViews()
+        if FavoriteManager.shared.isFavorite(movie: movie){
+            barButtonItem.image = UIImage(named: "FilledStarIcon")
+        }
     }
     
     var imgPosterHeightConstraint : NSLayoutConstraint?
@@ -118,6 +127,16 @@ class MovieDetailViewController: UIViewController {
         lblOverview.text = movie.overview
         if let voteCount = movie.voteCount, voteCount > 0{
             lblVote.text = "\(movie.voteAverage ?? 0)/10 (\(voteCount))"
+        }
+    }
+    
+    @objc public func changeFavorite() {
+        if FavoriteManager.shared.isFavorite(movie: movie){
+            barButtonItem.image = UIImage(named: "StarIcon")
+            _ = FavoriteManager.shared.remove(movie: movie)
+        }else{
+            barButtonItem.image = UIImage(named: "FilledStarIcon")
+            FavoriteManager.shared.save(movie: movie)
         }
     }
 }
