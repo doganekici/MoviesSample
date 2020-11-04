@@ -1,7 +1,7 @@
 # MoviesSample
 
 ### Requirements
-Xcode 12.0
+Xcode 11.5
 
 ### Screenshots
 <p float="left">
